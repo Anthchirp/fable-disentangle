@@ -1,4 +1,7 @@
 from __future__ import division
+
+__version__ = "1.0"
+
 try:
   import boost.python
 except Exception:
