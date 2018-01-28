@@ -39,6 +39,9 @@ setup(name='fable',
       license='BSD',
       entry_points={
       },
+      setup_requires=[
+        'pytest-runner',
+      ],
       tests_require=['mock',
                      'pytest'],
       classifiers = [
