@@ -4,6 +4,7 @@ import os
 
 from libtbx.test_utils import show_diff
 from libtbx import easy_run
+import pytest
 
 def remove_file(path):
   if os.path.exists(path):
@@ -22,23 +23,23 @@ def build_cmds(tst_f):
   result.append("fable_cout"+exe)
   return [os.path.join(".", cmd) for cmd in result]
 
-def test_open(tmpdir):
+@pytest.mark.parametrize("status, expected", [
+    ("old", [['F'], False, ['T'], True, ['T'], True, 1]),
+    ("new", [['T'], True, ['F'], True, ['F'], True, 1]),
+    ("unknown", [['T'], True, ['T'], True, ['T'], True, 1]),
+    ("scratch", [['T'], False, ['T'], True, ['T'], True, 1]),
+])
+def test_open(tmpdir, status, expected):
   tmpdir.chdir()
-  expected = {
-        "old": [['F'], False, ['T'], True, ['T'], True, 1],
-        "new": [['T'], True, ['F'], True, ['F'], True, 1],
-        "unknown": [['T'], True, ['T'], True, ['T'], True, 1],
-        "scratch": [['T'], False, ['T'], True, ['T'], True, 1]}
-  for status in ["old", "new", "unknown", "scratch"]:
-    tst_f = "exercise_open_%s.f" % status
-    open(tst_f, "w").write("""\
+  tst_f = "exercise_open_%s.f" % status
+  open(tst_f, "w").write("""\
       program prog
       open(1, file='exercise_open.tmp', status='%s', iostat=ios)
       write(6, '(l1)') (ios .eq. 0)
       end
 """ % status)
-    #
-    for cmd in build_cmds(tst_f=tst_f):
+  #
+  for cmd in build_cmds(tst_f=tst_f):
       remove_file("exercise_open.tmp")
       stdout_1 = easy_run.fully_buffered(
         command=cmd).raise_if_errors().stdout_lines
@@ -61,7 +62,7 @@ def test_open(tmpdir):
       #
       results = [
         stdout_1, exists_1, stdout_2, exists_2, stdout_3, exists_3, size_3]
-      assert results == expected[status]
+      assert results == expected
 
 def test_mixed_read_write(tmpdir):
   tmpdir.chdir()
