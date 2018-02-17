@@ -34,7 +34,9 @@ setup(name='fable',
       author_email='scientificsoftware@diamond.ac.uk',
       download_url="https://github.com/Anthchirp/fable-disentangle",
       version=find_version('fable', '__init__.py'),
-      install_requires=[],
+      install_requires=[
+        'munch',
+      ],
       packages=find_packages(),
       license='BSD',
       entry_points={

@@ -1,6 +1,9 @@
 from __future__ import division
-from libtbx.utils import product
-from libtbx import group_args
+
+import munch
+import operator
+import functools
+
 from libtbx import mutable
 from libtbx import Auto
 import os.path as op
@@ -738,7 +741,7 @@ def convert_data_type_and_dims(conv_info, fdecl, crhs, force_arr=False):
       vals = conv_info.fproc.eval_dimensions_simple(
         dim_tokens=dt, allow_power=False)
       if (vals.count(None) == 0):
-        sz = product(vals)
+        sz = functools.reduce(operator.mul, vals, 1)
         if (sz <= abs(conv_info.arr_nd_size_max)):
           from fable.read import dimensions_are_simple
           if (dimensions_are_simple(dim_tokens=dt)):
@@ -1202,7 +1205,7 @@ def add_allocate_lines_to_mbr_scope(allocate_line_lists, mbr_buffer):
     mbr_buffer.append(" ".join(line_list))
 
 def convert_variant_allocate_and_bindings(conv_info, top_scope):
-  result_buffers = group_args(
+  result_buffers = munch.Munch(
     first_time=[],
     loc_equivalences=[],
     bindings=[])
@@ -2485,7 +2488,7 @@ def convert_to_struct(
     if (need_ifdef):
       callback("#endif")
   #
-  return group_args(
+  return munch.Munch(
     need_dynamic_parameters=need_dynamic_parameters)
 
 def generate_common_report(
@@ -2784,7 +2787,7 @@ def convert_commons(
   {}""" % ",\n    ".join(initializations))
   callback("};")
   #
-  return group_args(
+  return munch.Munch(
     member_registry=member_registry,
     save_struct_buffers=save_struct_buffers)
 
