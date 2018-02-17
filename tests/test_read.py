@@ -1,11 +1,13 @@
-from __future__ import division
+from __future__ import absolute_import, division
+from cStringIO import StringIO
+import fable
 from fable import read
 from libtbx.test_utils import Exception_expected, approx_equal, show_diff
-import libtbx.load_env
+from libtbx.utils import Sorry
 import os
 op = os.path
 
-def exercise_strip_spaces_separate_strings():
+def test_strip_spaces_separate_strings():
   from fable.read import Error, source_line, strip_spaces_separate_strings
   import itertools
   global_line_index_generator = itertools.count()
@@ -65,14 +67,12 @@ Missing terminating %s character:
 %s^""" % (q, cmbnd, "-"*nd))
     else: raise Exception_expected
 
-def exercise_valid(verbose):
-  t_dir = libtbx.env.under_dist(
-    module_name="fable", path="test/valid", test=op.isdir)
+def test_valid():
+  t_dir = os.path.join(fable.__path__[0], 'test', 'valid')
   #
   read_already = set()
   def get_fprocs(file_name):
-    if (verbose):
-      print "exercise_valid:", file_name
+    print(file_name)
     read_already.add(file_name)
     return read.process(file_names=[op.join(t_dir, file_name)])
   #
@@ -104,24 +104,20 @@ continue""")
     if (file_name.endswith(".f") and not file_name in read_already):
       get_fprocs(file_name)
 
-def exercise_lenient(verbose):
-  t_dir = libtbx.env.under_dist(
-    module_name="fable", path="test/lenient", test=op.isdir)
+def test_lenient():
+  t_dir = os.path.join(fable.__path__[0], 'test', 'lenient')
   #
   def get(file_name):
-    if (verbose):
-      print "exercise_lenient:", file_name
+    print(file_name)
     return read.process(file_names=[op.join(t_dir, file_name)])
   #
   get("str_blank_str.f")
   get("str_cont_line_str.f")
 
-def exercise_syntax_error(verbose):
-  t_dir = libtbx.env.under_dist(
-    module_name="fable", path="test/syntax_error", test=op.isdir)
+def test_syntax_error():
+  t_dir = os.path.join(fable.__path__[0], 'test', 'syntax_error')
   def fail(file_name):
-    if (verbose):
-      print "exercise_syntax_error:", file_name
+    print(file_name)
     read.process(file_names=[op.join(t_dir, file_name)])
   from fable.read import Error
   try:
@@ -578,13 +574,11 @@ Missing terminating ' within character format specifier "(')":""")
 -------------^""")
   else: raise Exception_expected
 
-def exercise_semantic_error(verbose):
-  t_dir = libtbx.env.under_dist(
-    module_name="fable", path="test/semantic_error", test=op.isdir)
+def test_semantic_error():
+  t_dir = os.path.join(fable.__path__[0], 'test', 'semantic_error')
   from fable import SemanticError
   def fail(file_name):
-    if (verbose):
-      print "exercise_semantic_error:", file_name
+    print(file_name)
     read.process(file_names=[op.join(t_dir, file_name)])
   try:
     fail("missing_include.f")
@@ -779,12 +773,10 @@ def exercise_semantic_error(verbose):
 ----------------------^""")
   else: raise Exception_expected
 
-def exercise_unsupported(verbose):
-  t_dir = libtbx.env.under_dist(
-    module_name="fable", path="test/unsupported", test=op.isdir)
+def test_unsupported():
+  t_dir = os.path.join(fable.__path__[0], 'test', 'unsupported')
   def fail(file_name):
-    if (verbose):
-      print "exercise_unsupported:", file_name
+    print(file_name)
     read.process(file_names=[op.join(t_dir, file_name)])
   try:
     fail("hollerith_cont_lines.f")
@@ -807,14 +799,13 @@ def exercise_unsupported(verbose):
 --------------------^""")
   else: raise Exception_expected
 
-def exercise_tokens_as_string(verbose):
-  t_dir = libtbx.env.under_dist(
-    module_name="fable", path="test/valid", test=op.isdir)
-  from tokenization import tokens_as_string
+def test_tokens_as_string():
+  verbose = False
+  t_dir = os.path.join(fable.__path__[0], 'test', 'valid')
+  from fable.tokenization import tokens_as_string
   for file_name in sorted(os.listdir(t_dir)):
     if (not file_name.endswith(".f")): continue
-    if (verbose):
-      print "exercise_tokens_as_string:", file_name
+    print(file_name)
     all_fprocs = read.process(file_names=[op.join(t_dir, file_name)])
     for fproc in all_fprocs.all_in_input_order:
       for ei in fproc.executable:
@@ -829,11 +820,9 @@ def exercise_tokens_as_string(verbose):
       if (verbose):
         print
 
-def exercise_show():
-  t_dir = libtbx.env.under_dist(
-    module_name="fable", path="test/valid", test=op.isdir)
+def test_show():
+  t_dir = os.path.join(fable.__path__[0], 'test', 'valid')
   all_fprocs = read.process(file_names=[op.join(t_dir, "subroutine_3.f")])
-  from cStringIO import StringIO
   cio = StringIO()
   all_fprocs.show_counts_by_type(out=cio, prefix="$ ")
   assert not show_diff(cio.getvalue(), """\
@@ -844,15 +833,13 @@ $   function: 0
 $   blockdata: 0
 """)
 
-def exercise_build_fprocs_by_name():
-  t_dir = libtbx.env.under_dist(
-    module_name="fable", path="test/valid", test=op.isdir)
+def test_build_fprocs_by_name():
+  t_dir = os.path.join(fable.__path__[0], 'test', 'valid')
   for pair in [
         ("subroutine_3.f", "subroutine_4.f"),
         ("implied_program.f", "implied_program.f")]:
     file_names = [op.join(t_dir, file_name) for file_name in pair]
     all_fprocs = read.process(file_names=file_names)
-    from libtbx.utils import Sorry
     try:
       all_fprocs.fprocs_by_name()
     except Sorry, e:
@@ -867,9 +854,8 @@ Fortran procedure name conflict:
         assert str(e).endswith("implied_program.f(2)")
     else: raise Exception_expected
 
-def exercise_eval_const_expression_simple(verbose):
-  t_dir = libtbx.env.under_dist(
-    module_name="fable", path="test/valid", test=op.isdir)
+def test_eval_const_expression_simple():
+  t_dir = os.path.join(fable.__path__[0], 'test', 'valid')
   file_name = "const_expressions.f"
   all_fprocs = read.process(file_names=[op.join(t_dir, file_name)])
   assert len(all_fprocs.all_in_input_order) == 2
@@ -898,22 +884,3 @@ def exercise_eval_const_expression_simple(verbose):
   fproc = all_fprocs.all_in_input_order[0]
   val = fproc.eval_const_expression_simple(identifier="n5f")
   assert approx_equal(val, 297845.226131)
-
-def run(args):
-  assert args in [[], ["--verbose"]]
-  verbose = (len(args) != 0)
-  exercise_strip_spaces_separate_strings()
-  exercise_valid(verbose=verbose)
-  exercise_lenient(verbose=verbose)
-  exercise_syntax_error(verbose=verbose)
-  exercise_semantic_error(verbose=verbose)
-  exercise_unsupported(verbose=verbose)
-  exercise_tokens_as_string(verbose=verbose)
-  exercise_show()
-  exercise_build_fprocs_by_name()
-  exercise_eval_const_expression_simple(verbose=verbose)
-  print "OK"
-
-if (__name__ == "__main__"):
-  import sys
-  run(args=sys.argv[1:])
