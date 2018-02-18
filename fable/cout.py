@@ -5,7 +5,7 @@ import operator
 import functools
 
 from libtbx import Auto
-import os.path as op
+import os.path
 
 fmt_comma_placeholder = chr(255)
 
@@ -278,7 +278,7 @@ class major_types_cache(object):
       O.identifiers = set()
       import libtbx.load_env
       hpp = libtbx.env.under_dist(
-        module_name="fable", path="fem/major_types.hpp", test=op.isfile)
+        module_name="fable", path="fem/major_types.hpp", test=os.path.isfile)
       using_fem = "  using fem::"
       for line in open(hpp).read().splitlines():
         if (line.startswith(using_fem)):
@@ -2575,7 +2575,7 @@ def generate_common_report(
           break
         reported_already.add(tag)
         vn = tok_seq.value[0].value
-        dn, bn = op.split(sl.file_name)
+        dn, bn = os.path.split(sl.file_name)
         loc = ("%s(%s) %s" % (bn, sl.line_number, dn)).rstrip()
         if (loc == prev_loc): loc = ""
         else: prev_loc = loc
