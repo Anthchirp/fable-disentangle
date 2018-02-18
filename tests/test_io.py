@@ -2,7 +2,6 @@ from __future__ import absolute_import, division, print_function
 
 import os
 
-from libtbx.test_utils import show_diff
 from libtbx import easy_run
 import pytest
 
@@ -89,10 +88,7 @@ def test_mixed_read_write(tmpdir):
       command=cmd).raise_if_errors().stdout_lines
     assert stdout == ["24"]
     tmp_text = open(tmp, "rb").read()
-    assert not show_diff(tmp_text, """\
-12
-78
-""".replace("\n", os.linesep))
+    assert tmp_text == "12\n78\n".replace("\n", os.linesep)
 
 def test_read_from_non_existing_file(tmpdir):
   tmpdir.chdir()
@@ -106,6 +102,4 @@ def test_read_from_non_existing_file(tmpdir):
   for cmd in build_cmds(tst_f=tst_f):
     stdout = easy_run.fully_buffered(
       command=cmd, join_stdout_stderr=True).stdout_lines
-    assert not show_diff(stdout, """\
-std::exception what(): End of input during read
-""")
+    assert stdout == ["std::exception what(): End of input during read"]
