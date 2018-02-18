@@ -2,14 +2,23 @@ from __future__ import absolute_import, division, print_function
 
 import fable.cout
 import fable.read
-from libtbx.test_utils import \
-  show_diff, anchored_block_show_diff as absd
+from libtbx.test_utils import show_diff
 from cStringIO import StringIO
 import os
 import pytest
 
 def head_off(i): return i + 5
 def tail_off(i): return -(i + 12) - 1
+
+def absd(received, position, expected):
+  expected = expected.splitlines()
+  if position < 0:
+    start = position - len(expected) + 1
+    end = position + 1
+  else:
+    start = position
+    end = position + len(expected)
+  assert received[start:end] == expected
 
 common_argc_argv = """\
   common(
