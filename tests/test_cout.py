@@ -2,13 +2,15 @@ from __future__ import absolute_import, division, print_function
 
 import fable.cout
 import fable.read
-from libtbx.test_utils import show_diff
 from cStringIO import StringIO
 import os
 import pytest
 
 def head_off(i): return i + 5
 def tail_off(i): return -(i + 12) - 1
+
+def show_diff(received, expected):
+  assert received == expected.splitlines()
 
 def absd(received, position, expected):
   expected = expected.splitlines()
@@ -3316,9 +3318,7 @@ def test_common_equivalence_simple():
     if (expected_common_report is None):
       assert common_report_stringio.getvalue() == ""
     else:
-      assert not show_diff(
-        common_report_stringio.getvalue(),
-        expected_common_report)
+      assert common_report_stringio.getvalue() == expected_common_report
     return lines
   #
   for i in [1,2]:
