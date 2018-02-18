@@ -4,8 +4,9 @@ import munch
 import operator
 import functools
 
-from libtbx import Auto
 import os.path
+
+Auto = object() # a sentinel object that is only used internally
 
 fmt_comma_placeholder = chr(255)
 
