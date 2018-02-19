@@ -30,38 +30,38 @@ def build_cmds(tst_f):
 ])
 def test_open(tmpdir, status, expected):
   tmpdir.chdir()
-  tst_f = "exercise_open_%s.f" % status
-  open(tst_f, "w").write("""\
+  testfile = tmpdir.join("exercise_open_%s.f" % status)
+  testfile.write("""\
       program prog
       open(1, file='exercise_open.tmp', status='%s', iostat=ios)
       write(6, '(l1)') (ios .eq. 0)
       end
 """ % status)
-  #
-  for cmd in build_cmds(tst_f=tst_f):
-      remove_file("exercise_open.tmp")
-      stdout_1 = easy_run.fully_buffered(
-        command=cmd).raise_if_errors().stdout_lines
-      exists_1 = os.path.exists("exercise_open.tmp")
-      #
-      open("exercise_open.tmp", "w")
-      assert os.path.exists("exercise_open.tmp")
-      stdout_2 = easy_run.fully_buffered(
-        command=cmd).raise_if_errors().stdout_lines
-      exists_2 = os.path.exists("exercise_open.tmp")
-      #
-      open("exercise_open.tmp", "w").write("X")
-      stdout_3 = easy_run.fully_buffered(
-        command=cmd).raise_if_errors().stdout_lines
-      exists_3 = os.path.exists("exercise_open.tmp")
-      if (exists_3):
-        size_3 = os.path.getsize("exercise_open.tmp")
-      else:
-        size_3 = None
-      #
-      results = [
-        stdout_1, exists_1, stdout_2, exists_2, stdout_3, exists_3, size_3]
-      assert results == expected
+
+  for cmd in build_cmds(tst_f=testfile.strpath):
+    remove_file("exercise_open.tmp")
+    stdout_1 = easy_run.fully_buffered(
+      command=cmd).raise_if_errors().stdout_lines
+    exists_1 = os.path.exists("exercise_open.tmp")
+
+    open("exercise_open.tmp", "w")
+    assert os.path.exists("exercise_open.tmp")
+    stdout_2 = easy_run.fully_buffered(
+      command=cmd).raise_if_errors().stdout_lines
+    exists_2 = os.path.exists("exercise_open.tmp")
+
+    open("exercise_open.tmp", "w").write("X")
+    stdout_3 = easy_run.fully_buffered(
+      command=cmd).raise_if_errors().stdout_lines
+    exists_3 = os.path.exists("exercise_open.tmp")
+    if (exists_3):
+      size_3 = os.path.getsize("exercise_open.tmp")
+    else:
+      size_3 = None
+
+    results = [
+      stdout_1, exists_1, stdout_2, exists_2, stdout_3, exists_3, size_3]
+    assert results == expected
 
 def test_mixed_read_write(tmpdir):
   tmpdir.chdir()
