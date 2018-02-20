@@ -1,4 +1,5 @@
 from __future__ import division
+import errno
 import os
 op = os.path
 
@@ -150,8 +151,11 @@ class environment(object):
     if (out_name is None):
       assert file_name_cpp.endswith(".cpp")
       out_name = file_name_cpp[:-4] + out_suffix
-    from libtbx.utils import remove_files
-    remove_files(out_name)
+    try:
+      os.remove(out_name)
+    except OSError as e:
+      if e.errno != errno.ENOENT: # errno.ENOENT = no such file or directory
+        raise
     cmd = O.assemble_command(
       link=link,
       disable_warnings=disable_warnings,
