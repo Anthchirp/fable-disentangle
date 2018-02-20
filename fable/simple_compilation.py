@@ -40,17 +40,19 @@ class environment(object):
       O.compiler = compiler_from_os_environ
     from libtbx.path import full_command_path
     O.compiler_path = full_command_path(command=O.compiler+O.exe_suffix)
-    import libtbx.load_env
+    import libtbx.env_config
     if (O.compiler == "g++" and O.compiler_path is not None):
       O.gcc_version = libtbx.env_config.get_gcc_version(
         command_name=O.compiler)
     else:
       O.gcc_version = None
-    O.fable_dist = libtbx.env.dist_path(module_name="fable")
+    import fable
+    O.fable_dist = fable.__path__[0]
     if (op.isdir(op.join(O.fable_dist, "tbxx"))):
       O.tbxx_root = None
     else:
-      O.tbxx_root = op.dirname(libtbx.env.dist_path(module_name="tbxx"))
+      import tbxx
+      O.tbxx_root = op.dirname(tbxx.__path__[0])
     O.__have_pch = False
 
   def set_have_pch(O):
