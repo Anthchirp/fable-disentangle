@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 import os
 
-from libtbx import easy_run
+from fable.libtbx import easy_run
 import pytest
 
 def remove_file(path):

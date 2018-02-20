@@ -5,7 +5,7 @@ import itertools
 import os
 
 import fable.read
-from libtbx.utils import Sorry
+from fable.libtbx.utils import Sorry
 import pytest
 
 def show_diff(received, expected):
