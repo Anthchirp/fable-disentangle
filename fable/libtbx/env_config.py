@@ -1,5 +1,5 @@
 def get_gcc_version(command_name="gcc"):
-  from libtbx import easy_run
+  from fable.libtbx import easy_run
   buffer = easy_run.fully_buffered(
     command="%s -dumpversion" % command_name)
   if (len(buffer.stderr_lines) != 0):
