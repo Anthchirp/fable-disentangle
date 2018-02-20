@@ -68,8 +68,8 @@ Missing terminating %s character:
   |      %s|
 %s^""" % (q, cmbnd, "-"*nd)
 
-def test_valid():
-  t_dir = os.path.join(fable.__path__[0], 'test', 'valid')
+def test_valid(testsdir):
+  t_dir = os.path.join(testsdir, 'valid')
   #
   read_already = set()
   def get_fprocs(file_name):
@@ -105,8 +105,8 @@ continue""")
     if (file_name.endswith(".f") and not file_name in read_already):
       get_fprocs(file_name)
 
-def test_lenient():
-  t_dir = os.path.join(fable.__path__[0], 'test', 'lenient')
+def test_lenient(testsdir):
+  t_dir = os.path.join(testsdir, 'lenient')
   #
   def get(file_name):
     print(file_name)
@@ -115,8 +115,8 @@ def test_lenient():
   get("str_blank_str.f")
   get("str_cont_line_str.f")
 
-def test_syntax_error():
-  t_dir = os.path.join(fable.__path__[0], 'test', 'syntax_error')
+def test_syntax_error(testsdir):
+  t_dir = os.path.join(testsdir, 'syntax_error')
   def fail(file_name):
     print(file_name)
     fable.read.process(file_names=[os.path.join(t_dir, file_name)])
@@ -462,8 +462,8 @@ Missing terminating ' within character format specifier "(')":""")
   |      print|
 -------------^""")
 
-def test_semantic_error():
-  t_dir = os.path.join(fable.__path__[0], 'test', 'semantic_error')
+def test_semantic_error(testsdir):
+  t_dir = os.path.join(testsdir, 'semantic_error')
   def fail(file_name):
     print(file_name)
     fable.read.process(file_names=[os.path.join(t_dir, file_name)])
@@ -612,8 +612,8 @@ def test_semantic_error():
   |      equivalence (ne, nl)|
 ----------------------^""")
 
-def test_unsupported():
-  t_dir = os.path.join(fable.__path__[0], 'test', 'unsupported')
+def test_unsupported(testsdir):
+  t_dir = os.path.join(testsdir, 'unsupported')
   def fail(file_name):
     print(file_name)
     fable.read.process(file_names=[os.path.join(t_dir, file_name)])
@@ -634,9 +634,9 @@ def test_unsupported():
   |      write(6, '(2h'''')')|
 --------------------^""")
 
-def test_tokens_as_string():
+def test_tokens_as_string(testsdir):
+  t_dir = os.path.join(testsdir, 'valid')
   verbose = False
-  t_dir = os.path.join(fable.__path__[0], 'test', 'valid')
   from fable.tokenization import tokens_as_string
   for file_name in sorted(os.listdir(t_dir)):
     if (not file_name.endswith(".f")): continue
@@ -655,8 +655,8 @@ def test_tokens_as_string():
       if (verbose):
         print()
 
-def test_show():
-  t_dir = os.path.join(fable.__path__[0], 'test', 'valid')
+def test_show(testsdir):
+  t_dir = os.path.join(testsdir, 'valid')
   all_fprocs = fable.read.process(file_names=[os.path.join(t_dir, "subroutine_3.f")])
   cio = StringIO()
   all_fprocs.show_counts_by_type(out=cio, prefix="$ ")
@@ -668,8 +668,8 @@ $   function: 0
 $   blockdata: 0
 """
 
-def test_build_fprocs_by_name():
-  t_dir = os.path.join(fable.__path__[0], 'test', 'valid')
+def test_build_fprocs_by_name(testsdir):
+  t_dir = os.path.join(testsdir, 'valid')
   for pair in [
         ("subroutine_3.f", "subroutine_4.f"),
         ("implied_program.f", "implied_program.f")]:
@@ -687,8 +687,8 @@ Fortran procedure name conflict:
     before """)
       assert str(e.value).endswith("implied_program.f(2)")
 
-def test_eval_const_expression_simple():
-  t_dir = os.path.join(fable.__path__[0], 'test', 'valid')
+def test_eval_const_expression_simple(testsdir):
+  t_dir = os.path.join(testsdir, 'valid')
   file_name = "const_expressions.f"
   all_fprocs = fable.read.process(file_names=[os.path.join(t_dir, file_name)])
   assert len(all_fprocs.all_in_input_order) == 2

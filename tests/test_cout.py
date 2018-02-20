@@ -30,8 +30,8 @@ common_argc_argv = """\
     fem::common(argc, argv)
   {}"""
 
-def test_simple():
-  t_dir = os.path.join(fable.__path__[0], 'test', 'valid')
+def test_simple(testsdir):
+  t_dir = os.path.join(testsdir, 'valid')
   def get(
         file_name,
         top_procedures=None,
@@ -3101,8 +3101,8 @@ sub1(
 }
 """)
 
-def test_syntax_error():
-  t_dir = os.path.join(fable.__path__[0], 'test', 'syntax_error')
+def test_syntax_error(testsdir):
+  t_dir = os.path.join(testsdir, 'syntax_error')
   def fail(file_name):
     print(file_name)
     fable.cout.process(file_names=[os.path.join(t_dir, file_name)])
@@ -3125,8 +3125,8 @@ def test_syntax_error():
   |      x = 1.2**|
 ----------------^""")
 
-def test_semantic_error():
-  t_dir = os.path.join(fable.__path__[0], 'test', 'semantic_error')
+def test_semantic_error(testsdir):
+  t_dir = os.path.join(testsdir, 'semantic_error')
   def fail(file_name):
     print(file_name)
     fable.cout.process(file_names=[os.path.join(t_dir, file_name)])
@@ -3157,8 +3157,8 @@ def test_semantic_error():
   |      dimension nums(nums)|
 ------------------------^""")
 
-def test_unsupported():
-  t_dir = os.path.join(fable.__path__[0], 'test', 'unsupported')
+def test_unsupported(testsdir):
+  t_dir = os.path.join(testsdir, 'unsupported')
   def get(file_name):
     print(file_name)
     return fable.cout.process(file_names=[os.path.join(t_dir, file_name)])
@@ -3172,8 +3172,8 @@ def test_unsupported():
   goto statement_10;
 """)
 
-def test_dynamic_parameters():
-  t_dir = os.path.join(fable.__path__[0], 'test', 'valid')
+def test_dynamic_parameters(testsdir):
+  t_dir = os.path.join(testsdir, 'valid')
   def get(file_name, dynamic_parameters):
     print(file_name)
     file_names = [os.path.join(t_dir, file_name)]
@@ -3304,8 +3304,8 @@ struct sub_save
   nums(dimension(base_size * 2));
 """)
 
-def test_common_equivalence_simple():
-  t_dir = os.path.join(fable.__path__[0], 'test', 'valid')
+def test_common_equivalence_simple(testsdir):
+  t_dir = os.path.join(testsdir, 'valid')
   def get(file_name, common_names, expected_common_report=None):
     print(file_name)
     file_names = [os.path.join(t_dir, file_name)]
