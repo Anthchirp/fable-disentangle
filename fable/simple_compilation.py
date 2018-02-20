@@ -52,8 +52,9 @@ class environment(object):
     if (op.isdir(op.join(O.fable_dist, "tbxx"))):
       O.tbxx_root = None
     else:
-      import tbxx
-      O.tbxx_root = op.dirname(tbxx.__path__[0])
+      # this now lives inside fable repo.
+      assert False, "path %s does not seem to exist" % op.join(O.fable_dist, "tbxx")
+      #O.tbxx_root = op.dirname(tbxx.__path__[0])
     O.__have_pch = False
 
   def set_have_pch(O):
