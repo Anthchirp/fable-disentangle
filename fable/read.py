@@ -1,4 +1,5 @@
 from __future__ import division
+import collections
 from fable \
   import unsigned_integer_scan, \
   identifier_scan, \
@@ -2547,9 +2548,8 @@ class fproc(fproc_p_methods):
   def fmt_counts_by_statement_label(O):
     assert O.body_lines_processed_already
     result = O._fmt_counts_by_statement_label
-    if (result is None):
-      from libtbx import dict_with_default_0
-      result = dict_with_default_0()
+    if result is None:
+      result = collections.defaultdict(lambda: 0)
       for ei in O.executable:
         if (ei.key in ["read", "write", "print"] and ei.fmt_tokens is None):
           tl = ei.cilist.fmt
