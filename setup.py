@@ -38,6 +38,7 @@ setup(name='fable',
         'munch',
       ],
       packages=find_packages(),
+      include_package_data=True,
       license='BSD',
       entry_points={
       },

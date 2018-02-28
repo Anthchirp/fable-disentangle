@@ -1,0 +1,4 @@
+include fable/ext.cpp
+include fable/fem.hpp
+recursive-include fable/fem *
+recursive-include fable/tbxx *
