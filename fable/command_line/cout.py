@@ -148,5 +148,5 @@ def run(args):
     from fable.command_line.read import process_each
     process_each(process=process(options=co), file_names=files)
 
-if __name__ == "__main__":
+def main():
   run(args=sys.argv[1:])

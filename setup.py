@@ -41,6 +41,9 @@ setup(name='fable',
       include_package_data=True,
       license='BSD',
       entry_points={
+        'console_scripts': [
+          'fable.cout = fable.command_line.cout:main',
+        ],
       },
       setup_requires=[
         'pytest-runner',
