@@ -1,6 +1,7 @@
-from __future__ import division
+from __future__ import absolute_import, division
 
 import fable
+import math
 import munch
 import operator
 import functools
@@ -69,7 +70,12 @@ def break_line_if_necessary(callback, line, max_len=80, min_len=70):
       ic += 1
   potential_break_points.append((0, nc))
   n = nc - i_start
-  from libtbx.math_utils import iround, iceil
+
+  def iround(x):
+    if (x < 0): return int(x-0.5)
+    return int(x+.5)
+  def iceil(x):
+    return iround(math.ceil(x))
   l = max(min_len, iround(n / iceil(n / (max_len - i_start - 2))))
   b = 0
   f = 0
@@ -560,7 +566,7 @@ def convert_tokens(conv_info, tokens, commas=False, had_str_concat=None):
   prev_tok = None
   if (had_str_concat is None):
     had_str_concat = munch.Munch(value=False)
-  from tokenization import group_power
+  from fable.tokenization import group_power
   for tok in group_power(tokens=tokens):
     if (tok.is_seq()):
       if (    len(tok.value) == 2
