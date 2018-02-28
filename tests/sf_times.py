@@ -1,6 +1,5 @@
 from __future__ import division
 from libtbx.test_utils import approx_equal
-from libtbx.utils import Usage
 from libtbx import easy_run
 import libtbx.load_env
 import platform
@@ -369,7 +368,7 @@ def run_combinations(
         all_utimes.append((utimes, build_cmd + iml))
 
 def usage():
-  raise Usage("fable.python sf_times.py unit_test|quick|production")
+  sys.exit("fable.python sf_times.py unit_test|quick|production")
 
 def run(args):
   if (len(args) != 1): usage()
