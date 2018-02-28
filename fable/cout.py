@@ -1003,7 +1003,7 @@ def convert_io_loop(
   prev_tok = None
   if (had_str_concat is None):
     had_str_concat = munch.Munch(value=False)
-  from tokenization import group_power
+  from fable.tokenization import group_power
   for tok in group_power(tokens=tokens):
     if (tok.is_seq()):
       convert_io_loop(
