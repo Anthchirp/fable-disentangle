@@ -1,5 +1,6 @@
 from __future__ import division
 
+import fable
 import munch
 import operator
 import functools
@@ -268,24 +269,23 @@ def convert_token(vmap, leading, tok, had_str_concat=None):
   tok.raise_not_supported()
 
 class major_types_cache(object):
-
   __slots__ = ["identifiers"]
 
-  def __init__(O):
-    O.identifiers = None
+  def __init__(self):
+    self.identifiers = None
 
-  def __contains__(O, value):
-    if (O.identifiers is None):
-      O.identifiers = set()
-      import libtbx.load_env
-      hpp = libtbx.env.under_dist(
-        module_name="fable", path="fem/major_types.hpp", test=os.path.isfile)
+  def __contains__(self, value):
+    if self.identifiers is None:
+      self.identifiers = set()
+      hpp = os.path.join(fable.__path__[0], 'fem', 'major_types.hpp')
+      assert os.path.isfile(hpp)
       using_fem = "  using fem::"
-      for line in open(hpp).read().splitlines():
-        if (line.startswith(using_fem)):
-          assert line.endswith(";")
-          O.identifiers.add(line[len(using_fem):-1])
-    return value in O.identifiers
+      with open(hpp, 'r') as fh:
+        for line in fh.read().splitlines():
+          if line.startswith(using_fem):
+            assert line.endswith(";")
+            self.identifiers.add(line[len(using_fem):-1])
+    return value in self.identifiers
 
 major_types = major_types_cache()
 
