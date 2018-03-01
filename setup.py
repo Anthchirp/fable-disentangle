@@ -31,10 +31,11 @@ fable_ext = Extension(
     'fable_ext',
     sources=[os.path.join('fable', 'ext.cpp')],
     include_dirs=['fable'],
-#   , '/usr/local/include'],
-#   library_dirs=['/usr/local/lib/boost'],
-#   runtime_library_dirs=['/usr/local/lib/boost'],
-    libraries=['boost_python', 'm'],
+    libraries=['boost_python'],
+    extra_compile_args=[
+        '-g0', # disable debug symbols
+        '-Wno-sign-compare',
+    ],
 )
 
 setup(name='fable',

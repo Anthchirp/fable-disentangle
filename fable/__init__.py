@@ -75,9 +75,7 @@ def py_find_closing_parenthesis(code, start=0, stop=-1):
 
 try:
   from fable_ext import *
-  ext = fable
 except ImportError:
-  ext = None
   unsigned_integer_scan = py_unsigned_integer_scan
   floating_point_scan_after_exponent_char = \
     py_floating_point_scan_after_exponent_char
