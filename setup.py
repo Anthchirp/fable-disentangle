@@ -5,7 +5,7 @@ import os
 import re
 import sys
 
-from setuptools import find_packages, setup
+from setuptools import find_packages, setup, Extension
 
 # cf.
 # https://packaging.python.org/guides/single-sourcing-package-version/#single-sourcing-the-version
@@ -27,6 +27,15 @@ def find_version(*file_paths):
 if sys.version_info < (2,7):
   sys.exit('Sorry, Python < 2.7 is not supported')
 
+fable_ext = Extension('ext',
+                      sources=[os.path.join('fable', 'ext.cpp')],
+                      include_dirs=['fable', os.path.join('fable', 'fem')],
+#, '/usr/local/include'],
+#                      library_dirs=['/usr/local/lib/boost'],
+#                      runtime_library_dirs=['/usr/local/lib/boost'],
+#                      libraries=['boost_python'],
+                     )
+
 setup(name='fable',
       description='An experiment',
       url='https://github.com/Anthchirp/fable-disentangle',
@@ -39,6 +48,7 @@ setup(name='fable',
       ],
       packages=find_packages(),
       include_package_data=True,
+      ext_modules=[ fable_ext ],
       license='BSD',
       entry_points={
         'console_scripts': [
@@ -48,8 +58,7 @@ setup(name='fable',
       setup_requires=[
         'pytest-runner',
       ],
-      tests_require=['mock',
-                     'pytest'],
+      tests_require=['pytest'],
       classifiers = [
         'Development Status :: 1 - Planning',
         'License :: OSI Approved :: BSD License',
