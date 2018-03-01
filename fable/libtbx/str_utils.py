@@ -61,19 +61,6 @@ def py_string_representation(string, preferred_quote, alternative_quote):
   rapp(quote)
   return "".join(result)
 
-_have_string_representation = False
-def string_representation(string, preferred_quote, alternative_quote):
-  global string_representation
-  global _have_string_representation
-  if (not _have_string_representation):
-    _have_string_representation = True
-    try:
-      from boost.python import ext as _
-      string_representation = _.string_representation
-    except Exception:
-      string_representation = py_string_representation
-  return string_representation(string, preferred_quote, alternative_quote)
-
 def split_keeping_spaces(s):
   result = []
   field = []
