@@ -2,13 +2,6 @@ from __future__ import division
 
 __version__ = "1.0"
 
-try:
-  import boost.python
-except Exception:
-  ext = None
-else:
-  ext = boost.python.import_ext("fable_ext", optional=True)
-
 # compare with fem/utils/string.hpp
 def py_fem_utils_unsigned_integer_scan(code, start=0, stop=-1):
   i = start
@@ -80,9 +73,11 @@ def py_find_closing_parenthesis(code, start=0, stop=-1):
       n_inner += 1
   return -1
 
-if (ext is not None):
+try:
   from fable_ext import *
-else:
+  ext = fable
+except ImportError:
+  ext = None
   unsigned_integer_scan = py_unsigned_integer_scan
   floating_point_scan_after_exponent_char = \
     py_floating_point_scan_after_exponent_char

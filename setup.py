@@ -27,13 +27,13 @@ def find_version(*file_paths):
 if sys.version_info < (2,7):
   sys.exit('Sorry, Python < 2.7 is not supported')
 
-fable_ext = Extension('ext',
+fable_ext = Extension('fable_ext',
                       sources=[os.path.join('fable', 'ext.cpp')],
                       include_dirs=['fable', os.path.join('fable', 'fem')],
 #, '/usr/local/include'],
 #                      library_dirs=['/usr/local/lib/boost'],
 #                      runtime_library_dirs=['/usr/local/lib/boost'],
-#                      libraries=['boost_python'],
+#                     libraries=['boost_python'],
                      )
 
 setup(name='fable',
