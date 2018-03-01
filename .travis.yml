@@ -9,7 +9,7 @@ before_install:
   - sudo apt-get install libboost-dev
 
 install:
-  - pip install .
+  - pip install -v .
   - pip install 'pytest>=3'
 # pytest-cov pytest-timeout coveralls
 script:
