@@ -147,7 +147,7 @@ def run(args):
       exercise_given_members_size(array_alignment=f, n=n, n_trials=n_trials)
     exercise_exceptions(array_alignment=f)
   exercise_array_alignment(fable.equivalence.array_alignment)
-  if (fable.ext is not None):
+  if fable.ext:
     exercise_array_alignment(fem_array_alignment)
   exercise_cluster_unions()
   print "OK"
