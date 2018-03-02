@@ -5,7 +5,7 @@ import pytest
 import fable.cout
 import fable.simple_compilation
 from fable.tst_cout_compile import read_file_names_and_expected_cout
-from libtbx import easy_run
+from fable.libtbx import easy_run
 
 @pytest.mark.parametrize("""
     file_names_cpp,
