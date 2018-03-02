@@ -137,23 +137,21 @@ def process_file_info(ifort, comp_env, test_valid, file_info):
             buffers.raise_if_errors(Error=ExeError)
           if (buffers is not None):
             text = "\n".join(buffers.stdout_lines)
-            if True:
-                if (file_name == "intrinsics_extra.f"):
-                  check_intrinsics_extra(text)
-                  return
-                if (file_name == "sf.f"):
-                  text = text.replace(" -0.620088", " -0.620087")
-                elif (file_name == "unformatted_experiments.f"):
-                  if (sys.byteorder == "big"):
-                    text = text \
-                      .replace(
-                        "        1234        5678",
-                        "        5678        1234") \
-                      .replace(
-                        "        18558553691448",
-                        "        23330262356193")
-                have_diffs = show_diff(text, "\n".join(info.out_lines))
-                assert not have_diffs
+            if file_name == "intrinsics_extra.f":
+              check_intrinsics_extra(text)
+              return
+            if file_name == "sf.f":
+              text = text.replace(" -0.620088", " -0.620087")
+            elif file_name == "unformatted_experiments.f":
+              if sys.byteorder == "big":
+                text = text \
+                  .replace(
+                    "        1234        5678",
+                    "        5678        1234") \
+                  .replace(
+                    "        18558553691448",
+                    "        23330262356193")
+            assert text == "\n".join(info.out_lines)
           def run_with_args(args):
             cmda = cmd0 + " " + args
             print cmda
@@ -164,10 +162,10 @@ def process_file_info(ifort, comp_env, test_valid, file_info):
             exercise_end_of_line(exe_name=exe_name)
           elif (file_name == "dynamic_parameters_1.f"):
             buffers = run_with_args("--fem-dynamic-parameters=5")
-            assert not show_diff(buffers.stdout_lines, """\
-          14          15          16          17          18          19
-          20          21          22          23
-""")
+            assert buffers.stdout_lines == [
+                '          14          15          16          17          18          19',
+                '          20          21          22          23'
+            ]
             buffers = run_with_args("--fem-dynamic-parameters=5,6")
             assert buffers.stdout_lines[0].endswith(
               "Too many --fem-dynamic-parameters fields"
@@ -175,12 +173,12 @@ def process_file_info(ifort, comp_env, test_valid, file_info):
             buffers = run_with_args("--fem-dynamic-parameters=x")
             assert buffers.stdout_lines[0].endswith(
               'Invalid --fem-dynamic-parameters field (field 1): "x"')
-          elif (file_name == "intrinsics_iargc_getarg.f"):
+          elif file_name == "intrinsics_iargc_getarg.f":
             buffers = run_with_args("D rP uWq")
-            assert not show_diff(buffers.stdout_lines, "\n".join([
+            assert buffers.stdout_lines == [
               "A", "D   ", "rP  ", "uWq ",
               "B", "uWq ", "rP  ", "D   ",
-              "C", "rP  ", "uWq ", "D   "]) + "\n")
+              "C", "rP  ", "uWq ", "D   "]
 
 def exercise_end_of_line(exe_name):
   lines = """\
@@ -215,8 +213,9 @@ def test_compile_valid(tmpdir, testsdir, expected_output_for_valid_tests):
 
   ifort=False
   pch=False
-  pattern='stop'
   pattern=''
+  pattern='stop'
+
   comp_env = fable.simple_compilation.environment()
   if (comp_env.compiler_path is None):
     print "Skipping exercise_compile_valid(): %s not available." % \

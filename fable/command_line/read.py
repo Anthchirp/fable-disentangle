@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import absolute_import, division
 def process_each(process, file_names, report_success=False):
   import traceback
   n_fail = 0
@@ -74,6 +74,6 @@ def run(args):
       for fproc in all_fprocs.all_in_input_order:
         report_equivalence_clusters_with_mixed_data_types(fproc=fproc)
 
-if (__name__ == "__main__"):
+def main():
   import sys
   run(args=sys.argv[1:])
