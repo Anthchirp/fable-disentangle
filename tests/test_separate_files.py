@@ -20,7 +20,7 @@ from fable.libtbx import easy_run
 ])
 def test_exercise(
     tmpdir, testsdir,
-    expected_output_for_valid_tests,
+    dictionary_of_all_valid_tests_and_expected_outputs,
     file_names_cpp,
     number_of_function_files,
     separate_files_main_namespace,
@@ -55,5 +55,5 @@ def test_exercise(
   print(cmd)
   assert os.path.exists(cmd)
   stdout = easy_run.fully_buffered(command=cmd).raise_if_errors().stdout_lines
-  info = expected_output_for_valid_tests["subroutine_3.f"][0]
+  info = dictionary_of_all_valid_tests_and_expected_outputs["subroutine_3.f"][0]
   assert stdout == info.out_lines

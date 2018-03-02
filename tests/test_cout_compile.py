@@ -6,6 +6,7 @@ import sys
 
 import fable.cout
 import fable.simple_compilation
+import pytest
 
 file_names_disable_warnings = set([
   'add_reals.f',
@@ -208,25 +209,24 @@ klmno
     result = open("read_lines_out", "rb").read()
     assert result == expected.replace("\n", os.linesep)
 
-def test_compile_valid(tmpdir, testsdir, expected_output_for_valid_tests):
-  tmpdir.chdir()
-
+def test_compile_valid(tmpdir, testsdir, valid_test_and_expected_output):
   ifort=False
   pch=False
   pattern=''
   pattern='stop'
+
+  test_name, expected_output = valid_test_and_expected_output
+  if pattern not in test_name:
+    pytest.skip('Skipped due to filter rule')
 
   comp_env = fable.simple_compilation.environment()
   if (comp_env.compiler_path is None):
     print "Skipping exercise_compile_valid(): %s not available." % \
       comp_env.compiler
     return
-  test_valid = os.path.join(testsdir, "valid")
-  selected_file_names_and_expected_cout = filter( \
-    lambda item: pattern in item[0],
-    expected_output_for_valid_tests.items())
-  assert len(selected_file_names_and_expected_cout) != 0
-  #
+
+  tmpdir.chdir()
+
   if pch:
     comp_env.build(
       link=False,
@@ -234,7 +234,6 @@ def test_compile_valid(tmpdir, testsdir, expected_output_for_valid_tests):
       pch_name="fem.hpp",
       show_command=True)
     comp_env.set_have_pch()
-    print
-  #
-  for file_info in selected_file_names_and_expected_cout:
-    process_file_info(ifort, comp_env, test_valid, file_info)
+
+  test_valid = os.path.join(testsdir, "valid")
+  process_file_info(ifort, comp_env, test_valid, valid_test_and_expected_output)
