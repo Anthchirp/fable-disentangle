@@ -8,8 +8,8 @@ def run(args):
   if args not in (["--with-quotes"], ["--no-quotes"]):
     sys.exit("fable.fem_include_search_paths --with-quotes|--no-quotes")
   comp_env = simple_compilation.environment()
-  print comp_env.assemble_include_search_paths(
-    no_quotes=(args[0]=="--no-quotes"))
+  print(comp_env.assemble_include_search_paths(
+    no_quotes=(args[0]=="--no-quotes")))
 
 def main():
   run(args=sys.argv[1:])

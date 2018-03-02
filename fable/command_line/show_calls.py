@@ -1,5 +1,6 @@
 from __future__ import absolute_import, division
 import optparse
+import sys
 
 def run(args):
   if not args: args = ["--help"]
@@ -68,6 +69,5 @@ def run(args):
         print >> f, "  %s -> %s;" % lhs_rhs
       print >> f, "}"
 
-if __name__ == "__main__":
-  import sys
+def main():
   run(args=sys.argv[1:])

@@ -46,14 +46,13 @@ class process(object):
       O.dynamic_parameters = None
     else:
       from fable.cout import dynamic_parameter_props
-      from libtbx.utils import Sorry
       O.dynamic_parameters = []
       for opt_dp in options.dynamic_parameter:
         flds = opt_dp.replace("=", " ").split()
         if (len(flds) != 3):
-          raise Sorry('Invalid --dynamic-parameter="%s"' % opt_dp)
+          sys.exit('Invalid --dynamic-parameter="%s"' % opt_dp)
         if (flds[1] in O.dynamic_parameters):
-          raise Sorry('Duplicate --dynamic-parameter="%s"' % opt_dp)
+          sys.exit('Duplicate --dynamic-parameter="%s"' % opt_dp)
         O.dynamic_parameters.append(dynamic_parameter_props(
           name=flds[1],
           ctype=flds[0],
@@ -91,7 +90,7 @@ class process(object):
         link=opts.link, file_name_cpp="fable_cout.cpp", show_command=True)
       print
       if (opts.run):
-        from libtbx import easy_run
+        from fable.libtbx import easy_run
         cmd = os.path.join(".", out_name)
         if (opts.valgrind):
           cmd = "valgrind " + cmd
