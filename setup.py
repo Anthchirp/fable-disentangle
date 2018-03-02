@@ -54,9 +54,10 @@ setup(name='fable',
       license='BSD',
       entry_points={
         'console_scripts': [
-          'fable.cout = fable.command_line.cout:main',
-          'fable.read = fable.command_line.read:main',
-          'fable.split = fable.command_line.split:main',
+          'fable.%s = fable.command_line.%s:main' % (name, name) \
+          for name in ('cout', 'fem_include_search_paths',
+                       'insert_write_at_start_of_each_procedure',
+                       'read', 'show_calls', 'split')
         ],
       },
       setup_requires=[
