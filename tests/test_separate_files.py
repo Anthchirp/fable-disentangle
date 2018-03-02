@@ -4,7 +4,6 @@ import os
 import pytest
 import fable.cout
 import fable.simple_compilation
-from fable.tst_cout_compile import read_file_names_and_expected_cout
 from fable.libtbx import easy_run
 
 @pytest.mark.parametrize("""
@@ -21,6 +20,7 @@ from fable.libtbx import easy_run
 ])
 def test_exercise(
     tmpdir, testsdir,
+    expected_output_for_valid_tests,
     file_names_cpp,
     number_of_function_files,
     separate_files_main_namespace,
@@ -55,6 +55,5 @@ def test_exercise(
   print(cmd)
   assert os.path.exists(cmd)
   stdout = easy_run.fully_buffered(command=cmd).raise_if_errors().stdout_lines
-  info = read_file_names_and_expected_cout(test_valid=test_valid).get(
-    "subroutine_3.f")[0]
+  info = expected_output_for_valid_tests["subroutine_3.f"][0]
   assert stdout == info.out_lines
