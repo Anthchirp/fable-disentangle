@@ -61,9 +61,7 @@ def check_intrinsics_extra(text):
   assert check(), "Unexpected output:\n" + text
 
 def process_file_info(ifort, comp_env, test_valid, file_info):
-    print(file_info)
-    from libtbx import easy_run
-    from libtbx.test_utils import show_diff
+    from fable.libtbx import easy_run
     from cStringIO import StringIO
     file_name, io_infos = file_info
     print file_name
@@ -193,7 +191,7 @@ klmno
   open("dos.txt", "wb").write("\r\n".join(lines)+"\r\n")
   open("dos2.txt", "wb").write("\r\r\n".join(lines)+"\r\n")
   open("mac.txt", "wb").write("\r".join(lines)+"\r")
-  from libtbx import easy_run
+  from fable.libtbx import easy_run
   from libtbx.utils import remove_files
   expected_outputs = [
     "a   \nbc  \ndef \nghij\nklmn\n",
