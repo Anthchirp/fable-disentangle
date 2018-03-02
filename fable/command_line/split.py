@@ -32,6 +32,6 @@ def run(args):
             empty_lines = []
       del out
 
-if (__name__ == "__main__"):
+def main():
   import sys
   run(args=sys.argv[1:])

@@ -55,6 +55,7 @@ setup(name='fable',
       entry_points={
         'console_scripts': [
           'fable.cout = fable.command_line.cout:main',
+          'fable.split = fable.command_line.split:main',
         ],
       },
       setup_requires=[
