@@ -2,9 +2,10 @@ from __future__ import absolute_import, division, print_function
 
 import os
 
+from fable.libtbx import easy_run
 import pytest
 
-testlist = [
+command_expectation_list = [
     ('fable.split "%ssubroutine_1.f"', 'program_prog.f'),
     ('fable.read --each "%swrite_star.f"', 'Success: 1'),
     ('fable.read --warnings "%sequivalence_mixed.f"',
@@ -30,9 +31,9 @@ testlist = [
         "const int root_size = cmn.dynamic_params.root_size;"),
 ]
 
-@pytest.mark.parametrize('command,expected_output_fragment', testlist)
-def test_run_fable_command(tmpdir, testsdir, command, expected_output_fragment):
-  from libtbx import easy_run
+@pytest.mark.parametrize('test_number', range(len(command_expectation_list)))
+def test_run_fable_command(tmpdir, testsdir, test_number):
+  command, expected_output_fragment = command_expectation_list[test_number]
   join_stdout_stderr = 'fable_cout_common_report' in expected_output_fragment
   if "%s" in command:
     command = command % (os.path.join(testsdir, 'valid') + os.sep)
