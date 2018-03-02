@@ -1,7 +1,6 @@
-from __future__ import division
+from __future__ import absolute_import, division
 import errno
 import os
-op = os.path
 
 def quote(s):
   assert s.find('"') < 0
@@ -39,22 +38,22 @@ class environment(object):
     compiler_from_os_environ = os.environ.get("FABLE_COMPILER")
     if (compiler_from_os_environ is not None):
       O.compiler = compiler_from_os_environ
-    from libtbx.path import full_command_path
+    from fable.libtbx.path import full_command_path
     O.compiler_path = full_command_path(command=O.compiler+O.exe_suffix)
-    import libtbx.env_config
+    import fable.libtbx.env_config
     if (O.compiler == "g++" and O.compiler_path is not None):
-      O.gcc_version = libtbx.env_config.get_gcc_version(
+      O.gcc_version = fable.libtbx.env_config.get_gcc_version(
         command_name=O.compiler)
     else:
       O.gcc_version = None
     import fable
     O.fable_dist = fable.__path__[0]
-    if (op.isdir(op.join(O.fable_dist, "tbxx"))):
+    if (os.path.isdir(os.path.join(O.fable_dist, "tbxx"))):
       O.tbxx_root = None
     else:
       # this now lives inside fable repo.
-      assert False, "path %s does not seem to exist" % op.join(O.fable_dist, "tbxx")
-      #O.tbxx_root = op.dirname(tbxx.__path__[0])
+      assert False, "path %s does not seem to exist" % os.path.join(O.fable_dist, "tbxx")
+      #O.tbxx_root = os.path.dirname(tbxx.__path__[0])
     O.__have_pch = False
 
   def set_have_pch(O):
@@ -164,7 +163,7 @@ class environment(object):
       out_name=out_name)
     if (show_command):
       print cmd
-    from libtbx import easy_run
+    from fable.libtbx import easy_run
     buffers = easy_run.fully_buffered(command=cmd)
     if (O.compiler != "cl" or buffers.stderr_lines != [file_name_cpp]):
       buffers.raise_if_errors(Error=Error)

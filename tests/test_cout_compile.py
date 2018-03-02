@@ -3,8 +3,10 @@ from __future__ import division
 import os
 import re
 import sys
+from cStringIO import StringIO
 
 import fable.cout
+from fable.libtbx import easy_run
 import fable.simple_compilation
 import pytest
 
@@ -61,8 +63,6 @@ def check_intrinsics_extra(text):
   assert check(), "Unexpected output:\n" + text
 
 def process_file_info(ifort, comp_env, test_valid, file_info):
-    from fable.libtbx import easy_run
-    from cStringIO import StringIO
     file_name, io_infos = file_info
     print file_name
     file_path = os.path.join(test_valid, file_name)
@@ -191,20 +191,20 @@ klmno
   open("dos.txt", "wb").write("\r\n".join(lines)+"\r\n")
   open("dos2.txt", "wb").write("\r\r\n".join(lines)+"\r\n")
   open("mac.txt", "wb").write("\r".join(lines)+"\r")
-  from fable.libtbx import easy_run
-  from libtbx.utils import remove_files
   expected_outputs = [
     "a   \nbc  \ndef \nghij\nklmn\n",
     "a   \nbc  \ndef \nghij\nklmn\n",
     "a\r  \nbc\r \ndef\r\nghij\nklmn\n",
     "a\rbc\n"]
   for vers,expected in zip(["unix", "dos", "dos2", "mac"], expected_outputs):
-    remove_files(paths=["read_lines_out"])
     cmd = "%s < %s.txt > read_lines_out" % (os.path.join(".", exe_name), vers)
     print cmd
+    assert not os.path.exists("read_lines_out")
     easy_run.fully_buffered(command=cmd).raise_if_errors_or_output()
     assert os.path.isfile("read_lines_out")
-    result = open("read_lines_out", "rb").read()
+    with open("read_lines_out", "rb") as fh:
+      result = fh.read()
+    os.remove("read_lines_out")
     assert result == expected.replace("\n", os.linesep)
 
 @pytest.mark.parametrize("pch", [False, pytest.param(True, marks=pytest.mark.slow)])
