@@ -207,21 +207,15 @@ klmno
     result = open("read_lines_out", "rb").read()
     assert result == expected.replace("\n", os.linesep)
 
-def test_compile_valid(tmpdir, testsdir, valid_test_and_expected_output):
+@pytest.mark.parametrize("pch", [False, pytest.param(True, marks=pytest.mark.slow)])
+def test_compile_valid(tmpdir, testsdir, valid_test_and_expected_output, pch):
   ifort=False
-  pch=False
-  pattern=''
-  pattern='stop'
 
   test_name, expected_output = valid_test_and_expected_output
-  if pattern not in test_name:
-    pytest.skip('Skipped due to filter rule')
 
   comp_env = fable.simple_compilation.environment()
-  if (comp_env.compiler_path is None):
-    print "Skipping exercise_compile_valid(): %s not available." % \
-      comp_env.compiler
-    return
+  if not comp_env.compiler_path:
+    pytest.skip("%s not available" % comp_env.compiler)
 
   tmpdir.chdir()
 

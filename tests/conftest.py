@@ -7,6 +7,20 @@ import pytest
 
 tests_directory = os.path.dirname(os.path.realpath(__file__))
 
+def pytest_addoption(parser):
+  '''Add a '--runslow' option to py.test.'''
+  parser.addoption("--runslow", action="store_true",
+                   default=False, help="run slow tests")
+
+def pytest_collection_modifyitems(config, items):
+  '''Tests marked as slow will not be run unless slow tests are enabled with
+     the '--runslow' parameter or the test is selected specifically.'''
+  if not config.getoption("--runslow") and len(items) > 1:
+    skip_slow = pytest.mark.skip(reason="need --runslow option to run")
+    for item in items:
+      if "slow" in item.keywords:
+        item.add_marker(skip_slow)
+
 @pytest.fixture
 def testsdir():
   return tests_directory
@@ -50,7 +64,10 @@ def read_expected_output_for_valid_tests():
 
 expected_output_for_valid_tests_dict = read_expected_output_for_valid_tests()
 
-@pytest.fixture(params=expected_output_for_valid_tests_dict)
+@pytest.fixture(params=[ # mark most of the tests as slow tests
+    test if 'stop' in test else pytest.param(test, marks=pytest.mark.slow)
+    for test in expected_output_for_valid_tests_dict
+])
 def valid_test_and_expected_output(request):
   return (request.param, expected_output_for_valid_tests_dict[request.param])
 
