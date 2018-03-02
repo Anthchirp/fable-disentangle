@@ -10,10 +10,10 @@ before_install:
 
 install:
   - pip install -v .
-  - pip install 'pytest>=3'
+  - pip install 'pytest>=3' pytest-xdist
 # pytest-cov pytest-timeout coveralls
 script:
 #  - py.test --cov=workflows
-  - py.test --runslow
+  - py.test --runslow -n auto
 #after_success:
 #  - coveralls
