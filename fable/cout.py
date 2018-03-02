@@ -2596,8 +2596,7 @@ def generate_common_report(
   if (len(report.getvalue()) != 0 and stringio is None):
     import sys
     report_file_name = "fable_cout_common_report"
-    from libtbx.str_utils import show_string
-    print >> sys.stderr, "Writing file:", show_string(report_file_name)
+    print >> sys.stderr, "Writing file", report_file_name
     open(report_file_name, "w").write(report.getvalue())
   #
   return variant_common_names
