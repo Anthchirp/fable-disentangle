@@ -25,7 +25,7 @@ command_expectation_list = [
       'placeholder_please_replace::program_prog);'),
     ('fable.cout --namespace=test --run "%swrite_star.f"',
       'test::program_prog);'),
-    ('fable.cout --example', '  -3   1  -5'),
+    ('fable.cout %ssf.f --namespace example --run', '  -3   1  -5'),
     ('fable.cout "%sdynamic_parameters_1.f"'
       ' --dynamic-parameter="int root_size=1"',
         "const int root_size = cmn.dynamic_params.root_size;"),
