@@ -20,7 +20,9 @@ class environment(object):
     "gcc_version",
     "fable_dist",
     "tbxx_root",
-    "__have_pch"]
+    "__have_pch",
+    "__pch_path",
+  ]
 
   def __init__(O, compiler=None):
     if (os.name == "nt"):
@@ -48,16 +50,13 @@ class environment(object):
       O.gcc_version = None
     import fable
     O.fable_dist = fable.__path__[0]
-    if (os.path.isdir(os.path.join(O.fable_dist, "tbxx"))):
-      O.tbxx_root = None
-    else:
-      # this now lives inside fable repo.
-      assert False, "path %s does not seem to exist" % os.path.join(O.fable_dist, "tbxx")
-      #O.tbxx_root = os.path.dirname(tbxx.__path__[0])
+    assert os.path.isdir(os.path.join(O.fable_dist, "tbxx")) # this now lives inside fable repo.
     O.__have_pch = False
+    O.__pch_path = None
 
-  def set_have_pch(O):
+  def set_have_pch(O, path='.'):
     O.__have_pch = True
+    O.__pch_path = path
 
   def assemble_include_search_paths(O, no_quotes=False):
     if (O.compiler == "cl"):
@@ -69,9 +68,7 @@ class environment(object):
       if (not no_quotes):
         path = quote(path)
       return " %sI%s" % (sw, path)
-    return "%s%s" % (
-      add_to_include_search_path(O.fable_dist),
-      add_to_include_search_path(O.tbxx_root))
+    return "%s" % add_to_include_search_path(O.fable_dist)
 
   def assemble_command(O,
         link,
@@ -99,10 +96,10 @@ class environment(object):
         opt_x = " -x c++-header"
       else:
         opt_x = ""
-      if (not O.__have_pch):
-        opt_i = O.assemble_include_search_paths()
+      if O.__have_pch:
+        opt_i = " -I" + O.__pch_path
       else:
-        opt_i = " -I."
+        opt_i = O.assemble_include_search_paths()
       result = "%s -o %s %s%s -g -O0%s%s %s" % (
         O.compiler, qon, opt_c, opt_w, opt_i, opt_x, quote_list(file_names))
     return result

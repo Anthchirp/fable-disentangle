@@ -207,25 +207,33 @@ klmno
     os.remove("read_lines_out")
     assert result == expected.replace("\n", os.linesep)
 
-@pytest.mark.parametrize("pch", [False, pytest.param(True, marks=pytest.mark.slow)])
-def test_compile_valid(tmpdir, testsdir, valid_test_and_expected_output, pch):
-  ifort=False
-
-  test_name, expected_output = valid_test_and_expected_output
-
+@pytest.fixture(scope="session")
+def pch_path(tmpdir_factory):
   comp_env = fable.simple_compilation.environment()
   if not comp_env.compiler_path:
-    pytest.skip("%s not available" % comp_env.compiler)
-
-  tmpdir.chdir()
-
-  if pch:
+    return None
+  tmpdir = tmpdir_factory.mktemp('pch-path')
+  with tmpdir.as_cwd():
     comp_env.build(
       link=False,
       file_name_cpp=os.path.join(fable.__path__[0], "fem.hpp"),
       pch_name="fem.hpp",
       show_command=True)
-    comp_env.set_have_pch()
+  return tmpdir.strpath
 
+@pytest.mark.parametrize("pch", [False, pytest.param(True, marks=pytest.mark.slow)])
+def test_compile_valid(tmpdir, testsdir, valid_test_and_expected_output, pch, pch_path):
+  ifort=False
+
+  comp_env = fable.simple_compilation.environment()
+  if not comp_env.compiler_path:
+    pytest.skip("%s not available" % comp_env.compiler)
+
+  if pch:
+    assert pch_path
+    comp_env.set_have_pch(pch_path)
+
+  test_name, expected_output = valid_test_and_expected_output
   test_valid = os.path.join(testsdir, "valid")
-  process_file_info(ifort, comp_env, test_valid, valid_test_and_expected_output)
+  with tmpdir.as_cwd():
+    process_file_info(ifort, comp_env, test_valid, valid_test_and_expected_output)
