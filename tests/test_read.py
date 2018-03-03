@@ -8,9 +8,6 @@ import fable.read
 from fable.libtbx.utils import Sorry
 import pytest
 
-def show_diff(received, expected):
-  assert received == expected.splitlines()
-
 def test_strip_spaces_separate_strings():
   from fable.read import source_line, strip_spaces_separate_strings
   global_line_index_generator = itertools.count()
@@ -87,13 +84,8 @@ def test_valid(testsdir):
   #
   prog = get_program("goto_forms.f")
   keys = [ei.key for ei in prog.executable]
-  assert not show_diff(keys, """\
-goto_computed
-goto_computed
-goto_computed
-goto_computed
-continue
-continue""")
+  assert keys == ['goto_computed'] * 4 + ['continue'] * 2
+
   #
   get_program("string_spanning_continuation_lines.f")
   #

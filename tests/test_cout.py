@@ -9,9 +9,6 @@ import pytest
 def head_off(i): return i + 5
 def tail_off(i): return -(i + 12) - 1
 
-def show_diff(received, expected):
-  assert received == expected.splitlines()
-
 def absd(received, position, expected):
   expected = expected.splitlines()
   if position < 0:
@@ -50,7 +47,7 @@ def test_simple(testsdir):
       inline_all=inline_all,
       common_report_stringio=common_report_stringio)
   #
-  assert not show_diff(get("add_reals.f"), """\
+  assert get("add_reals.f") == """\
 #include <fem.hpp> // Fortran EMulation library of fable module
 
 namespace placeholder_please_replace {
@@ -83,7 +80,7 @@ main(
     argc, argv,
     placeholder_please_replace::program_prog);
 }
-""")
+""".splitlines()
   #
   assert not absd(get("add_real_integer.f"), tail_off(1), """\
   float a = fem::float0;
