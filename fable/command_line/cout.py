@@ -101,7 +101,7 @@ def run(args):
   if not args:
     args = ["--help"]
   elif args == ["--example"]:
-    sys.exit("fable.cout tests/valid/sf.f --namespace example --run")
+    args = [ os.path.join(fable.__path__[0], 'example', 'sf.f'), '--namespace', 'example', '--run']
   parser = optparse.OptionParser(usage="fable.cout [options] fortran_file ...")
   parser.add_option("-?", action="help", help=optparse.SUPPRESS_HELP)
   parser.add_option("--compile", action="store_true", default=False)
