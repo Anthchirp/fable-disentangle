@@ -1,4 +1,5 @@
 from __future__ import division
+from __future__ import print_function
 
 import os
 import re
@@ -64,7 +65,7 @@ def check_intrinsics_extra(text):
 
 def process_file_info(ifort, comp_env, test_valid, file_info):
     file_name, io_infos = file_info
-    print file_name
+    print(file_name)
     file_path = os.path.join(test_valid, file_name)
     top_procedures = top_procedures_by_file_name.get(file_name)
     common_equivalence_simple_list = [set(
@@ -92,7 +93,8 @@ def process_file_info(ifort, comp_env, test_valid, file_info):
         base_name += "_alt%d" % i_ces
       fem_cpp = base_name + "_fem.cpp"
       fem_exe_name = fem_cpp[:-4] + comp_env.exe_suffix
-      print >> open(fem_cpp, "w"), "\n".join(lines)
+      with open(fem_cpp, "w") as fh:
+        fh.write("\n".join(lines))
       if ifort:
         ifort_exe_name = base_name + "_ifort"
         ifort_cmd = 'ifort -diag-disable 7000 -o %s "%s"' % (
@@ -111,20 +113,20 @@ def process_file_info(ifort, comp_env, test_valid, file_info):
           Error=BuildError)
       #
       if (ifort_cmd is not None):
-        print ifort_cmd
+        print(ifort_cmd)
         buffers = easy_run.fully_buffered(command=ifort_cmd)
         buffers.raise_if_errors_or_output(Error=BuildError)
       #
       for info in io_infos:
         if info.skip_run:
-          print "Skipping run:", file_name
+          print("Skipping run:", file_name)
           continue
         if len(info.inp_lines) != 0:
-          print "  number of input lines:", len(info.inp_lines)
+          print("  number of input lines:", len(info.inp_lines))
         for exe_name in [fem_exe_name, ifort_exe_name]:
           if (exe_name is None): continue
           cmd = cmd0 = os.path.join(".", exe_name)
-          print cmd
+          print(cmd)
           join_stdout_stderr = (
                (file_name in file_names_join_stdout_stderr))
           buffers = easy_run.fully_buffered(
@@ -153,7 +155,7 @@ def process_file_info(ifort, comp_env, test_valid, file_info):
             assert text == "\n".join(info.out_lines)
           def run_with_args(args):
             cmda = cmd0 + " " + args
-            print cmda
+            print(cmda)
             result = easy_run.fully_buffered(
               command=cmda, join_stdout_stderr=True)
             return result
@@ -198,7 +200,7 @@ klmno
     "a\rbc\n"]
   for vers,expected in zip(["unix", "dos", "dos2", "mac"], expected_outputs):
     cmd = "%s < %s.txt > read_lines_out" % (os.path.join(".", exe_name), vers)
-    print cmd
+    print(cmd)
     assert not os.path.exists("read_lines_out")
     easy_run.fully_buffered(command=cmd).raise_if_errors_or_output()
     assert os.path.isfile("read_lines_out")

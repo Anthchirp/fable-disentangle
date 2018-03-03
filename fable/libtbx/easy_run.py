@@ -1,4 +1,5 @@
 from __future__ import absolute_import, division
+from __future__ import print_function
 
 import os
 import subprocess
@@ -7,7 +8,7 @@ import sys
 def _show_lines(lines, out, prefix):
   if (out is None): out = sys.stdout
   for line in lines:
-    print >> out, prefix+line
+    print(prefix+line, file=out)
 
 class fully_buffered_base(object):
 

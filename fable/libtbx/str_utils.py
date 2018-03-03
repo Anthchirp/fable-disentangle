@@ -1,5 +1,6 @@
 
 from __future__ import division, absolute_import
+from __future__ import print_function
 import cStringIO
 import sys
 
@@ -128,7 +129,7 @@ def make_header (line, out=None, header_len=80):
   out_string = "\n"+"="*(fill_l-1)+" "+line+" "+"="*(fill_r-1)+"\n"
   if(len(out_string) > 80):
     out_string = "\n"+"="*(fill_l-1)+" "+line+" "+"="*(fill_r-2)+"\n"
-  print >> out, out_string
+  print(out_string, file=out)
   out.flush()
 
 def make_sub_header(text, out=None, header_len=80, sep='-'):
@@ -166,7 +167,7 @@ def make_sub_header(text, out=None, header_len=80, sep='-'):
   out_string = "\n"+" "*(fill_l-1)+" "+line+" "+" "*(fill_r-1)+"\n"
   if(len(out_string) > 80):
     out_string = "\n"+" "*(fill_l-1)+" "+line+" "+" "*(fill_r-2)+"\n"
-  print >> out, out_string
+  print(out_string, file=out)
   out.flush()
 
 def wordwrap (text, max_chars=80) :
@@ -235,9 +236,9 @@ def show_sorted_by_counts(
     max([len(l) for l,c,a in lca]),
     max([len(str(lca[i][1])) for i in [0,-1]]))
   for l,c,a in lca:
-    print >> out, prefix+fmt % (l,c),
-    if (a is not None and len(a) > 0): print >> out, a,
-    print >> out
+    print(prefix+fmt % (l,c), end=' ', file=out)
+    if (a is not None and len(a) > 0): print(a, end=' ', file=out)
+    print(file=out)
   return True
 
 def overwrite_at(s, offset, replacement):
@@ -480,7 +481,7 @@ class framed_output (object) :
 def print_message_in_box (message, **kwds) :
   box = framed_output(**kwds)
   for line in line_breaker(message, box.get_best_text_width()) :
-    print >> box, line
+    print(line, file=box)
   del box
 
 def make_big_header (line, out=None, header_len=80, border_char="#") :
