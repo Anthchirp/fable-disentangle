@@ -40,8 +40,12 @@ class environment(object):
     compiler_from_os_environ = os.environ.get("FABLE_COMPILER")
     if (compiler_from_os_environ is not None):
       O.compiler = compiler_from_os_environ
-    from fable.libtbx.path import full_command_path
-    O.compiler_path = full_command_path(command=O.compiler+O.exe_suffix)
+    O.compiler_path = None
+    for path in os.environ["PATH"].split(os.pathsep):
+      exe_file = os.path.join(path, O.compiler+O.exe_suffix)
+      if os.path.exists(exe_file):
+        O.compiler_path = exe_file
+        break
     import fable.libtbx.env_config
     if (O.compiler == "g++" and O.compiler_path is not None):
       O.gcc_version = fable.libtbx.env_config.get_gcc_version(

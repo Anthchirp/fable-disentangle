@@ -2917,8 +2917,7 @@ class split_fprocs(object):
               else:
                 msg.append(name.format_error(
                   msg="%d. definition" % len(msg), prefix="  "))
-            from libtbx.utils import Sorry
-            raise Sorry("\n".join(msg))
+            sys.exit("\n".join(msg))
           O._fprocs_by_name[fproc.name.value] = fproc
           if (fproc.name_plain is not None):
             O._fprocs_by_name_plain[fproc.name_plain.value] = fproc
