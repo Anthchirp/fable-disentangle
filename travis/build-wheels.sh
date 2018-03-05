@@ -3,7 +3,7 @@ set -e -x
 
 # Install a system package required by our library
 yum install -y atlas-devel \
-    libboost-dev libboost-python-dev
+    boost boost-devel boost-python boost-python-devel
 
 # Compile wheels
 for PYBIN in /opt/python/*/bin; do
