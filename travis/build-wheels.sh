@@ -2,8 +2,9 @@
 set -e -x
 
 # Install a system package required by our library
-yum install -y atlas-devel \
-    boost boost-devel boost-python boost-python-devel
+yum install -y atlas-devel
+
+/io/travis/build-boost.sh
 
 # Compile wheels
 for PYBIN in /opt/python/*/bin; do
