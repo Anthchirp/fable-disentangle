@@ -26,7 +26,7 @@ wget --no-check-certificate https://dl.bintray.com/boostorg/release/${BOOST_VERS
 tar xf boost_${BOOST_VERSION_UNDERSCORE}.tar.gz
 pushd /boost_${BOOST_VERSION_UNDERSCORE}
 ./bootstrap.sh
-./bjam cxxflags=-fPIC cflags=-fPIC variant=release link=static --prefix=/usr --with-date_time --with-filesystem --with-python --with-regex --with-system install
+./bjam cxxflags=-fPIC cflags=-fPIC variant=release link=static --prefix=/usr --with-date_time --with-filesystem --with-regex --with-system install
 popd
 rm -rf boost_${BOOST_VERSION_UNDERSCORE}.tar.gz boost_${BOOST_VERSION_UNDERSCORE}
 # Boost always install header-only parts but they also take up quite some space.
