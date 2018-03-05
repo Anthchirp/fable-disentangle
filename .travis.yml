@@ -1,19 +1,18 @@
-#dist: trusty
-#sudo: required
-
-language: python
-python:
-  - "2.7"
-
-before_install:
-  - sudo apt-get install libboost-dev libboost-python-dev
+matrix:
+  include:
+    - sudo: required
+      services:
+        - docker
+      env: DOCKER_IMAGE=quay.io/pypa/manylinux1_x86_64
+    - sudo: required
+      services:
+        - docker
+      env: DOCKER_IMAGE=quay.io/pypa/manylinux1_i686
+           PRE_CMD=linux32
 
 install:
-  - pip install -v .
-  - pip install 'pytest>=3' pytest-xdist
-# pytest-cov pytest-timeout coveralls
+  - docker pull $DOCKER_IMAGE
+
 script:
-#  - py.test --cov=workflows
-  - py.test --runslow -n auto
-#after_success:
-#  - coveralls
+  - docker run --rm -v `pwd`:/io $DOCKER_IMAGE $PRE_CMD /io/travis/build-wheels.sh
+  - ls wheelhouse/
